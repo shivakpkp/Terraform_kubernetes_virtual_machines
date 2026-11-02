@@ -8,3 +8,4 @@ variable "resource_group_name" {
   default = "rg-kubernetes-${local.env}"
 }
 
+   
