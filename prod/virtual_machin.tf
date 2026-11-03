@@ -7,7 +7,7 @@ module "nic" {
             location            = var.location
             ip_configuration = {
                 name                          = "ipconfig1"
-                subnet_id                     = module.subnet.subnets["vm-subnet"].id
+                subnet_id                     = module.subnet["vm-subnet"].id
                 private_ip_address_allocation = "Dynamic"
             }
         }
@@ -17,7 +17,7 @@ module "nic" {
             location            = var.location
             ip_configuration = {
                 name                          = "ipconfig1"
-                subnet_id                     = module.subnet.subnets["vm-subnet"].id
+                subnet_id                     = module.subnet["vm-subnet"].id
                 private_ip_address_allocation = "Dynamic"
             }
         }
@@ -27,7 +27,7 @@ module "nic" {
             location            = var.location
             ip_configuration = {
                 name                          = "ipconfig1"
-                subnet_id                     = module.subnet.subnets["vm-subnet"].id
+                subnet_id                     = module.subnet["vm-subnet"].id
                 private_ip_address_allocation = "Dynamic"
             }
         }
