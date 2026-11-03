@@ -24,13 +24,6 @@ module "network" {
 module "subnet" {
   source = "git::https://github.com/shivakpkp/terraform-azure-modules.git//network/terraform-azure-subnet?ref=prod"
 
-  location = var.location
-
-  tags = {
-    Environment = "${local.env}"
-    ManagedBy   = "Terraform"
-  }
-
   subnet = {
     vm-subnet = {
       name                = "subnet-ks"
