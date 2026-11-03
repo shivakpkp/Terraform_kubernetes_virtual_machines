@@ -5,31 +5,31 @@ module "nic" {
             name                = "nic-aks-master"
             resource_group_name = local.resource_group_name
             location            = var.location
-            ip_configuration = {
+            ip_configuration = [{
                 name                          = "ipconfig1"
-                subnet_id                     = module.subnet["vm-subnet"].id
+                subnet_id                     = module.subnet.subnet_ids["vm-subnet"].id
                 private_ip_address_allocation = "Dynamic"
-            }
+            }]
         }
         "worker-nic-01" = {
             name                = "nic-aks-worker-01"
             resource_group_name = local.resource_group_name
             location            = var.location
-            ip_configuration = {
+            ip_configuration = [{
                 name                          = "ipconfig1"
-                subnet_id                     = module.subnet["vm-subnet"].id
+                subnet_id                     = module.subnet.subnet_ids["vm-subnet"].id
                 private_ip_address_allocation = "Dynamic"
-            }
+            }]
         }
         "worker-nic-02" = {
             name                = "nic-aks-worker-02"
             resource_group_name = local.resource_group_name
             location            = var.location
-            ip_configuration = {
+            ip_configuration = [{
                 name                          = "ipconfig1"
-                subnet_id                     = module.subnet["vm-subnet"].id
+                subnet_id                     = module.subnet.subnet_ids["vm-subnet"].id
                 private_ip_address_allocation = "Dynamic"
-            }
+            }]
         }
     }
     tags = var.tags
