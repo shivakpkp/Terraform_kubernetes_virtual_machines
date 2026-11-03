@@ -21,3 +21,22 @@ module "network" {
   }
 }
 
+module "subnet" {
+  source = "git::https://github.com/shivakpkp/terraform-azure-modules.git//network/terraform-azure-subnet?ref=prod"
+
+  location = var.location
+
+  tags = {
+    Environment = "${local.env}"
+    ManagedBy   = "Terraform"
+  }
+
+  subnet = {
+    vm-subnet = {
+      name                = "subnet-ks"
+      resource_group_name = local.resource_group_name
+      virtual_network_name = module.network.virtual_network.virtual_network.name
+      address_prefixes    = ["10.20.0.0/24"]
+    }
+  }
+}
