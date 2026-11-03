@@ -1,0 +1,93 @@
+module "nic" {
+    source = "git::https://github.com/shivakpkp/terraform-azure-modules.git//network/terraform-azure-network-interface?ref=prod"
+    network_interfaces = {
+        "master-nic" = {
+            name                = "nic-aks-master"
+            resource_group_name = local.resource_group_name
+            location            = var.location
+            ip_configuration = {
+                name                          = "ipconfig1"
+                subnet_id                     = module.subnet.subnets["vm-subnet"].id
+                private_ip_address_allocation = "Dynamic"
+            }
+        }
+        "worker-nic-01" = {
+            name                = "nic-aks-worker-01"
+            resource_group_name = local.resource_group_name
+            location            = var.location
+            ip_configuration = {
+                name                          = "ipconfig1"
+                subnet_id                     = module.subnet.subnets["vm-subnet"].id
+                private_ip_address_allocation = "Dynamic"
+            }
+        }
+        "worker-nic-02" = {
+            name                = "nic-aks-worker-02"
+            resource_group_name = local.resource_group_name
+            location            = var.location
+            ip_configuration = {
+                name                          = "ipconfig1"
+                subnet_id                     = module.subnet.subnets["vm-subnet"].id
+                private_ip_address_allocation = "Dynamic"
+            }
+        }
+    }
+}
+
+module "vm" {
+  source = "git::https://github.com/shivakpkp/terraform-azure-modules.git//compute/terraform-azure-windows-vm?ref=prod"
+
+  windows_virtual_machines = {
+    master-vm = {
+      name                = "vm-aks-master"
+      computer_name      = "vm-aks-master"
+      resource_group_name = local.resource_group_name
+      location            = var.location
+      vm_size             = "Standard_B2s"
+      admin_username      = "adminuser"
+      network_interface_ids = [
+        module.nic.nic["master-nic"].id
+      ]
+      source_image_reference = {
+        publisher = "MicrosoftWindowsServer"
+        offer     = "WindowsServer"
+        sku       = "2019-Datacenter"
+        version   = "latest"
+      }
+    }
+    worker-vm-01 = {
+      name                = "vm-aks-worker-01"
+      computer_name      = "vm-aks-worker-01"
+      resource_group_name = local.resource_group_name
+      location            = var.location
+      vm_size             = "Standard_B2s"
+      admin_username      = "adminuser"
+      network_interface_ids = [
+        module.nic.nic["worker-nic-01"].id
+      ]
+      source_image_reference = {
+        publisher = "MicrosoftWindowsServer"
+        offer     = "WindowsServer"
+        sku       = "2019-Datacenter"
+        version   = "latest"
+      }
+    }
+    master-vm-02 = {
+      name                = "vm-aks-master-02"
+      computer_name      = "vm-aks-master-02"
+      resource_group_name = local.resource_group_name
+      location            = var.location
+      vm_size             = "Standard_B2s"
+      admin_username      = "adminuser"
+      network_interface_ids = [
+        module.nic.nic["worker-nic-02"].id
+      ]
+      source_image_reference = {
+        publisher = "MicrosoftWindowsServer"
+        offer     = "WindowsServer"
+        sku       = "2019-Datacenter"
+        version   = "latest"
+      }
+    }
+  }
+}
