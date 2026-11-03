@@ -32,6 +32,7 @@ module "nic" {
             }
         }
     }
+    tags = var.tags
 }
 
 module "vm" {
