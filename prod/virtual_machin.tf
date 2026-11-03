@@ -44,7 +44,7 @@ module "vm" {
       computer_name      = "vm-aks-master"
       resource_group_name = local.resource_group_name
       location            = var.location
-      vm_size             = "Standard_B2s"
+      size             = "Standard_B2s"
       admin_username      = "adminuser"
       network_interface_ids = [
         module.nic.network_interface_ids["master-nic"].id
@@ -61,7 +61,7 @@ module "vm" {
       computer_name      = "vm-aks-worker-01"
       resource_group_name = local.resource_group_name
       location            = var.location
-      vm_size             = "Standard_B2s"
+      size             = "Standard_B2s"
       admin_username      = "adminuser"
       network_interface_ids = [
         module.nic.network_interface_ids["worker-nic-01"].id
@@ -78,7 +78,7 @@ module "vm" {
       computer_name      = "vm-aks-master-02"
       resource_group_name = local.resource_group_name
       location            = var.location
-      vm_size             = "Standard_B2s"
+      size             = "Standard_B2s"
       admin_username      = "adminuser"
       network_interface_ids = [
         module.nic.network_interface_ids["worker-nic-02"].id
