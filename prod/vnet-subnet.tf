@@ -28,7 +28,7 @@ module "subnet" {
     vm-subnet = {
       name                = "subnet-ks"
       resource_group_name = local.resource_group_name
-      virtual_network_name = module.network.virtual_network.virtual_network.name
+      virtual_network_name = module.network.virtual_networks.application.name
       address_prefixes    = ["10.20.0.0/24"]
     }
   }
