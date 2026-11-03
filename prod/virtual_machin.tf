@@ -47,7 +47,7 @@ module "vm" {
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
       network_interface_ids = [
-        module.nic.nic["master-nic"].id
+        module.nic.network_interface_ids["master-nic"].id
       ]
       source_image_reference = {
         publisher = "MicrosoftWindowsServer"
@@ -64,7 +64,7 @@ module "vm" {
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
       network_interface_ids = [
-        module.nic.nic["worker-nic-01"].id
+        module.nic.network_interface_ids["worker-nic-01"].id
       ]
       source_image_reference = {
         publisher = "MicrosoftWindowsServer"
@@ -81,7 +81,7 @@ module "vm" {
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
       network_interface_ids = [
-        module.nic.nic["worker-nic-02"].id
+        module.nic.network_interface_ids["worker-nic-02"].id
       ]
       source_image_reference = {
         publisher = "MicrosoftWindowsServer"
