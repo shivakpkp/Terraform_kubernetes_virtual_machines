@@ -42,7 +42,7 @@ jobs:
         STATE_CONTAINER: ${{ vars.TF_STATE_CONTAINER }}
         STATE_KEY: ${{ vars.TF_STATE_KEY }}
 
-        TF_VAR_admin_passwords: ${{ secrets.TF_VAR_ADMIN_PASSWORD }}
+        TF_VAR_admin_password: ${{ secrets.TF_VAR_ADMIN_PASSWORD }}
 
         TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
     steps:
@@ -95,7 +95,7 @@ jobs:
           STATE_KEY: ${{ vars.TF_STATE_KEY }}
           
           TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          TF_VAR_admin_passwords: ${{ secrets.TF_VAR_ADMIN_PASSWORD }}
+          TF_VAR_admin_password: ${{ secrets.TF_VAR_ADMIN_PASSWORD }}
         uses: shivakpkp/terraform-actions/terraform-apply@v1.0.4
         with:
           working_directory: prod
