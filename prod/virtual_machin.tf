@@ -46,6 +46,7 @@ module "vm" {
       location            = var.location
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
+      admin_passwords = var.admin_password
       network_interface_ids = [
         module.nic.nic["master-nic"].id
       ]
@@ -63,6 +64,7 @@ module "vm" {
       location            = var.location
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
+      admin_passwords = var.admin_password
       network_interface_ids = [
         module.nic.nic["worker-nic-01"].id
       ]
@@ -80,6 +82,7 @@ module "vm" {
       location            = var.location
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
+      admin_passwords = var.admin_password
       network_interface_ids = [
         module.nic.nic["worker-nic-02"].id
       ]

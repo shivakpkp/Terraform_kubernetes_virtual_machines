@@ -11,4 +11,8 @@ variable "tags" {
   }
 }
 
+variable "admin_password" {
+  type    = map(string)
+  default = {}
+}
    

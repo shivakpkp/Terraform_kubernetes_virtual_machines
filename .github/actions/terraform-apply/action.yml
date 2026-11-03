@@ -1,0 +1,52 @@
+name: Terraform Apply
+description: Apply Terraform configuration using a previously generated plan file.
+
+inputs:
+  working_directory:
+    description: Terraform root directory
+    required: true
+
+  terraform_version:
+    description: Terraform CLI version
+    required: true
+
+  plan_artifact_name:
+    description: Name of the Terraform plan artifact to download
+    required: true
+
+  plan_file_name:
+    description: Saved plan filename inside the artifact; defaults to plan_artifact_name for compatibility
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      with:
+        persist-credentials: false
+
+    - name: Setup-initiate-cache Terraform
+      uses: shivakpkp/terraform-actions/terraform-init-cache-setup@v1.0.0
+      with:
+        working_directory: ${{ inputs.working_directory }}
+        terraform_version: ${{ inputs.terraform_version }}
+
+    - uses: actions/download-artifact@v8
+      with:
+        name: ${{ inputs.plan_artifact_name }}
+        path: ${{inputs.working_directory}}
+
+    - name: Terraform apply
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      env:
+        PLAN_FILE_NAME: ${{ inputs.plan_file_name || inputs.plan_artifact_name }}
+      run: |
+        if [[ ! -f "$PLAN_FILE_NAME" ]]; then
+          echo "::error::Saved Terraform plan file was not found."
+          exit 1
+        fi
+        terraform apply -input=false -auto-approve "./$PLAN_FILE_NAME"
