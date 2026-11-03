@@ -37,7 +37,7 @@ module "nic" {
 
 module "vm" {
   source = "git::https://github.com/shivakpkp/terraform-azure-modules.git//compute/terraform-azure-windows-vm?ref=prod"
-
+  admin_passwords = var.admin_password
   windows_virtual_machines = {
     master-vm = {
       name                = "vm-aks-master"
@@ -46,7 +46,6 @@ module "vm" {
       location            = var.location
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
-      admin_passwords = var.admin_password
       network_interface_ids = [
         module.nic.nic["master-nic"].id
       ]
@@ -64,7 +63,6 @@ module "vm" {
       location            = var.location
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
-      admin_passwords = var.admin_password
       network_interface_ids = [
         module.nic.nic["worker-nic-01"].id
       ]
@@ -82,7 +80,6 @@ module "vm" {
       location            = var.location
       vm_size             = "Standard_B2s"
       admin_username      = "adminuser"
-      admin_passwords = var.admin_password
       network_interface_ids = [
         module.nic.nic["worker-nic-02"].id
       ]
