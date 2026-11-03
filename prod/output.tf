@@ -1,3 +1,3 @@
 output "Vnet" {
-  value = module.network.virtual_network
+  value = module.network.virtual_networks
 }
