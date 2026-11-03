@@ -1,7 +1,7 @@
 module "network" {
   source = "git::https://github.com/shivakpkp/terraform-azure-modules.git//network/terraform-azure-vnirtual-network?ref=prod"
 
-  location = ver.location
+  location = var.location
 
   tags = {
     Environment = "${local.env}"
