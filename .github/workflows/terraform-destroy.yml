@@ -1,0 +1,84 @@
+name: Terraform Destroy
+description: Destroy Terraform configuration using a previously generated plan file.
+
+on:
+    workflow_dispatch:
+
+env: 
+    working-directory: "prod"
+    terraform-version: "1.5.7"
+    TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform-plugin-cache
+jobs:
+    destroy-plan:
+        name: terraform destroy
+        runs-on: ubuntu-24.04
+        outputs:
+            has_changes: ${{ steps.terraform-destroy.outputs.has_changes }}
+            archive_name: ${{ steps.terraform-destroy.outputs.archive_name }}
+        environment: POC
+        env:
+            ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+            ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+            ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+            STATE_RESOURCE_GROUP_NAME: ${{ vars.TF_STATE_RESOURCE_GROUP_NAME }}
+            STATE_STORAGE_ACCOUNT: ${{ vars.TF_STATE_STORAGE_ACCOUNT }}
+            STATE_CONTAINER: ${{ vars.TF_STATE_CONTAINER }}
+            STATE_KEY: ${{ vars.TF_STATE_KEY }}
+
+            TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+            - name: Terraform Destroy
+              id: terraform-destroy
+              uses: shivakpkp/terraform-actions/terraform-destroy@v1.0.6
+              with:
+                working_directory: "prod"
+                terraform_version: "1.5.7"
+
+    destroy-apply:
+        name: terraform destroy apply
+        runs-on: ubuntu-24.04
+        needs: destroy-plan
+        environment: POC
+        if : >-
+            ${{ needs.destroy-plan.outputs.has_changes == 'true' && github.ref == 'refs/heads/prod' }}
+        env:
+            TF_IN_AUTOMATION: "true"
+            TF_INPUT: "false"
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+            - name: Login to Azure
+              uses: azure/login@v2
+              with:
+                creds: |
+                    {
+                    "clientId": "${{ secrets.ARM_CLIENT_ID }}",
+                    "clientSecret": "${{ secrets.ARM_CLIENT_SECRET }}",
+                    "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}",
+                    "tenantId": "${{ secrets.ARM_TENANT_ID }}"
+                    }
+
+            - name: Terraform Destroy Apply
+              env:
+                ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+                ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+                ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+                ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+                STATE_RESOURCE_GROUP_NAME: ${{ vars.TF_STATE_RESOURCE_GROUP_NAME }}
+                STATE_STORAGE_ACCOUNT: ${{ vars.TF_STATE_STORAGE_ACCOUNT }}
+                STATE_CONTAINER: ${{ vars.TF_STATE_CONTAINER }}
+                STATE_KEY: ${{ vars.TF_STATE_KEY }}
+
+                TF_VAR_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+              uses: shivakpkp/terraform-actions/terraform-apply@v1.0.5
+              with:
+                working_directory: "prod"
+                terraform_version: "1.5.7"
+                plan_artifact_name: ${{ needs.destroy-plan.outputs.archive_name }}
