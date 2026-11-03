@@ -40,8 +40,8 @@ module "vm" {
   admin_passwords = var.admin_password
   windows_virtual_machines = {
     master-vm = {
-      name                = "vm-aks-master"
-      computer_name      = "vm-aks-master"
+      name                = "vm-master"
+      computer_name      = "vm-master"
       resource_group_name = local.resource_group_name
       location            = var.location
       size             = "Standard_B2s"
@@ -57,8 +57,8 @@ module "vm" {
       }
     }
     worker-vm-01 = {
-      name                = "vm-aks-worker-01"
-      computer_name      = "vm-aks-worker-01"
+      name                = "vm-worker-01"
+      computer_name      = "vm-worker-01"
       resource_group_name = local.resource_group_name
       location            = var.location
       size             = "Standard_B2s"
@@ -73,9 +73,9 @@ module "vm" {
         version   = "latest"
       }
     }
-    master-vm-02 = {
-      name                = "vm-aks-master-02"
-      computer_name      = "vm-aks-master-02"
+    worker-vm-02 = {
+      name                = "vm-worker-02"
+      computer_name      = "vm-worker-02"
       resource_group_name = local.resource_group_name
       location            = var.location
       size             = "Standard_B2s"
